@@ -5,8 +5,8 @@ signed in to a GitHub account that can access mustafa-kamoona/tlp-mail-marker. R
 access is managed by the owner. Do not upload these packages to an add-on store
 or distribute them publicly yet.
 
-The v0.3.1 Firefox signing submission is complete. Distribute its XPI only after
-the maintainer downloads and verifies Mozilla’s signed file.
+Mozilla approved and signed the v0.3.1 Firefox package on 2026-10-09.
+Permanent installation and persistence after restart were verified on macOS.
 
 ## Install
 

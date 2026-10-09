@@ -45,7 +45,14 @@ const assert = (ok, message) => { if (!ok) throw new Error(message); };
 async function scenario(id, fn) {
   const started = Date.now();
   try { await fn(); results.push({ id, passed: true, durationMs: Date.now() - started }); console.log(`PASS ${id}`); }
-  catch (error) { results.push({ id, passed: false, error: String(error) }); console.log(`FAIL ${id}: ${error}`); }
+  catch (error) {
+    let state;
+    try {
+      state = await execute(`return {url:location.href,title:document.title,ready:document.readyState,text:document.body?.innerText?.slice(0,3000),roundcubeBusy:window.rcmail?.busy};`);
+    } catch (diagnosticError) { state = {error:String(diagnosticError)}; }
+    results.push({ id, passed: false, error: String(error), state });
+    console.log(`FAIL ${id}: ${error}; state: ${JSON.stringify(state)}`);
+  }
 }
 async function execute(script, args = [], context = 'content', async = false) {
   await client.command('Marionette:SetContext', { value: context });
@@ -53,7 +60,10 @@ async function execute(script, args = [], context = 'content', async = false) {
   return response.value;
 }
 async function wait(script, args = [], context = 'content') {
-  for (let i = 0; i < 100; i++) { if (await execute(script, args, context)) return; await delay(100); }
+  // Native UI prompts and the first composer can be slower on cold CI runners.
+  // Keep polling the real state; do not repeat the click or force registration.
+  const deadline = Date.now() + 30_000;
+  while (Date.now() < deadline) { if (await execute(script, args, context)) return; await delay(100); }
   throw new Error(`Timed out: ${script}`);
 }
 async function go(url) {

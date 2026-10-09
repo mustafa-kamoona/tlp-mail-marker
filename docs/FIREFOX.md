@@ -9,8 +9,8 @@ declared. Authorise each Roundcube host in Settings.
 ## Install the signed private build
 
 Mozilla approved and signed v0.3.0 for **unlisted self-distribution** on
-2026-10-09. The v0.3.1 icon update and matching build source have also been
-submitted; its signed package is pending download verification. There is no
+2026-10-09. The v0.3.1 icon update and matching build source were approved on the same
+date, and its signed package was downloaded and verified. There is no
 public add-on store listing; the repository remains private.
 
 1. Obtain `tlp-mail-marker-firefox-0.3.1.xpi` and its `.sha256` file from the
@@ -20,7 +20,7 @@ public add-on store listing; the repository remains private.
 4. Approve installation. Add your Roundcube host in Settings, approve site
    access, and reload existing webmail tabs.
 
-For v0.3.0, permanent installation and persistence after restart were verified in Firefox
+For v0.3.0 and v0.3.1, permanent installation and persistence after restart were verified in Firefox
 157.0.1 on macOS using a disposable profile with signature enforcement enabled.
 The signed payload matches the submitted build, apart from Mozilla removing the
 manifest's trailing newline and adding signature metadata. Android is untested.
