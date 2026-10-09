@@ -6,7 +6,25 @@ Manifest V3 event background and add-on ID `tlp-mail-marker@mustafa-kamoona`.
 No broad site access is granted at installation and no data collection is
 declared. Authorise each Roundcube host in Settings.
 
-## Install the unsigned private build
+## Install the signed private build
+
+Mozilla approved and signed v0.3.0 for **unlisted self-distribution** on
+2026-10-09. There is no public add-on store listing; the repository remains
+private. The package and build source were submitted for Mozilla review.
+
+1. Obtain `tlp-mail-marker-firefox-0.3.0.xpi` and its `.sha256` file from the
+   maintainer's private tester pack and verify the checksum.
+2. In Firefox, open **Add-ons and themes** (`about:addons`).
+3. Open the gear menu, choose **Install Add-on From File**, and select the XPI.
+4. Approve installation. Add your Roundcube host in Settings, approve site
+   access, and reload existing webmail tabs.
+
+Permanent installation and persistence after restart were verified in Firefox
+157.0.1 on macOS using a disposable profile with signature enforcement enabled.
+The signed payload matches the submitted build, apart from Mozilla removing the
+manifest's trailing newline and adding signature metadata. Android is untested.
+
+## Install a locally built unsigned package
 
 1. Verify the ZIP against its `.sha256` file, then extract it into a folder.
 2. Open `about:debugging#/runtime/this-firefox` in Firefox desktop.
@@ -24,8 +42,10 @@ Add-ons manager in standard Firefox.
 Mozilla signing is required for permanent installation in standard Firefox.
 An **unlisted** AMO signing submission provides a signed package without a public
 store listing, but submits the package, and potentially build source, to Mozilla
-for review. The repository remains private. No submission or signing has been
-performed for this build.
+for review. Local builds remain unsigned; rebuilding does not reproduce Mozilla's
+signature. New versions must be submitted through the existing add-on's Developer
+Hub entry. Keep the add-on ID unchanged. This beta has no automatic update URL;
+install later signed packages manually.
 
 Official instructions:
 [signing and distribution](https://extensionworkshop.com/documentation/publish/signing-and-distribution-overview/),

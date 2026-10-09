@@ -14,11 +14,12 @@ Verify `SHA256SUMS` or the archive's separate `.sha256` file. macOS/Linux:
   Extensions page, enable Developer mode, choose **Load unpacked**, then select
   that folder. In the extension's Settings, add your exact Roundcube hostname
   and approve access. Validated Roundcube version: 1.6.19, Elastic skin.
-- **Firefox desktop 140+:** unzip `tlp-mail-marker-firefox-0.3.0.zip`, open
-  `about:debugging#/runtime/this-firefox`, choose **Load Temporary Add-on**, and
-  select the extracted `manifest.json`. Add your Roundcube host in Settings
-  and approve access. This unsigned installation lasts until Firefox closes.
-  See [FIREFOX.md](FIREFOX.md) for signing requirements.
+- **Firefox desktop 140+:** open Add-ons and themes → gear menu →
+  **Install Add-on From File**, choose the Mozilla-signed
+  `tlp-mail-marker-firefox-0.3.0.xpi`, and approve installation. Add your
+  Roundcube host in Settings, approve access, and reload webmail tabs.
+  Local unsigned builds still need temporary installation; see
+  [FIREFOX.md](FIREFOX.md).
 - **Thunderbird:** open Add-ons and Themes → Extensions → gear menu →
   **Install Add-on From File**. Choose `tlp-mail-marker-thunderbird-0.3.0.xpi`
   and approve compose/storage access. Thunderbird 140+ is required. Test first
