@@ -26,6 +26,8 @@ await writeFile(join(profile, 'user.js'), Object.entries({
   'marionette.enabled': true, 'marionette.port': port,
   'browser.shell.checkDefaultBrowser': false, 'browser.startup.page': 0,
   'browser.startup.homepage': 'about:blank', 'browser.warnOnQuitShortcut': false,
+  'browser.startup.homepage_override.mstone': 'ignore',
+  'browser.aboutwelcome.enabled': false, 'browser.startup.firstrunSkipsHomepage': true,
   'browser.sessionstore.resume_from_crash': false,
   'browser.download.folderList': 2, 'browser.download.dir': downloads,
   'browser.download.useDownloadDir': true, 'browser.download.alwaysOpenPanel': false,
@@ -48,10 +50,14 @@ async function scenario(id, fn) {
   catch (error) {
     let state;
     try {
-      state = await execute(`return {url:location.href,title:document.title,ready:document.readyState,text:document.body?.innerText?.slice(0,3000),roundcubeBusy:window.rcmail?.busy};`);
+      state = await execute(`return {url:location.href,title:document.title,ready:document.readyState,text:document.body?.innerText?.slice(0,3000),roundcubeBusy:window.rcmail?.busy,domainInput:document.querySelector("#domain-input")?.value,domainStatus:document.querySelector("#domain-status")?.textContent};`);
     } catch (diagnosticError) { state = {error:String(diagnosticError)}; }
-    results.push({ id, passed: false, error: String(error), state });
-    console.log(`FAIL ${id}: ${error}; state: ${JSON.stringify(state)}`);
+    let browserState;
+    try {
+      browserState = await execute(`const w=Services.wm.getMostRecentWindow('navigator:browser'); return {focused:w.document.hasFocus(),notifications:w.PopupNotifications.getNotification('webextension-permissions')?.id,panelOpen:w.PopupNotifications.panel.state,tabs:[...w.gBrowser.browsers].map(b=>b.currentURI.spec)};`, [], 'chrome');
+    } catch (diagnosticError) { browserState = {error:String(diagnosticError)}; }
+    results.push({ id, passed: false, error: String(error), state, browserState });
+    console.log(`FAIL ${id}: ${error}; state: ${JSON.stringify(state)}; browser: ${JSON.stringify(browserState)}`);
   }
 }
 async function execute(script, args = [], context = 'content', async = false) {
@@ -71,6 +77,8 @@ async function go(url) {
   await client.command('WebDriver:Navigate', { url });
 }
 async function click(selector) {
+  // Permission doorhangers wait for an active browser window on cold profiles.
+  await execute('Services.wm.getMostRecentWindow("navigator:browser").focus();', [], 'chrome');
   await client.command('Marionette:SetContext', { value: 'content' });
   const found = await client.command('WebDriver:FindElement', { using: 'css selector', value: selector });
   await client.command('WebDriver:ElementClick', { id: found.value['element-6066-11e4-a52e-4f735466cecf'] });
@@ -166,7 +174,7 @@ try {
   await click('button[type="submit"], input[type="submit"]');
   // The login URL can already contain _task=mail while authentication/navigation
   // is still pending. Wait for the authenticated inbox before opening a composer.
-  await wait('return !!document.querySelector("#messagelist") && !document.querySelector("#rcmloginuser");');
+  await wait('return document.readyState==="complete" && !!document.querySelector("#messagelist") && !document.querySelector("#rcmloginuser") && !!window.rcmail && !window.rcmail.busy;');
   await scenario('selector-and-main-world-probe', async () => {
     await compose();
     assert(await execute(`return document.querySelectorAll('.tlp-mail-marker-ui').length===1 && document.documentElement.getAttribute('data-tlp-env-ready')==='1';`), 'One selector and page environment available');
