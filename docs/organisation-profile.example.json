@@ -1,0 +1,10 @@
+{
+  "format": "tlp-mail-marker-profile",
+  "version": 1,
+  "name": "Example organisation",
+  "settings": {
+    "allowedLevels": ["TLP:CLEAR", "TLP:GREEN", "TLP:AMBER", "TLP:AMBER+STRICT", "TLP:RED"],
+    "defaultLevel": null,
+    "missingClassification": "warn"
+  }
+}

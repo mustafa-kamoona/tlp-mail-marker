@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TLP Mail Marker — Settings</title>
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <main class="page">
+      <header class="page-header">
+        <h1 data-i18n="appName">TLP Mail Marker</h1>
+        <p class="subtitle" data-i18n="appDesc">Apply FIRST TLP 2.0 markings to outgoing email in Roundcube Webmail.</p>
+      </header>
+
+      <div id="managed-banner" class="banner" role="status" hidden>
+        <strong data-i18n="optManagedBannerTitle">Managed by your administrator.</strong>
+        <span data-i18n="optManagedBannerText">Locked settings and hosts are configured by policy and cannot be changed here.</span>
+      </div>
+
+      <section aria-labelledby="general-heading" class="card">
+        <h2 id="general-heading" data-i18n="optHeadingGeneral">General</h2>
+        <label class="row switch">
+          <input type="checkbox" id="enabled" />
+          <span data-i18n="optEnable">Enable TLP Mail Marker</span>
+        </label>
+        <p class="hint" data-i18n="optGeneralHint">
+          The extension only runs on the webmail domains you authorise below.
+          It never sends data anywhere.
+        </p>
+      </section>
+
+      <section aria-labelledby="domains-heading" class="card">
+        <h2 id="domains-heading" data-i18n="optHeadingDomains">Authorised webmail domains</h2>
+        <p class="hint" data-i18n="optDomainsHint">
+          Add the exact hostname of your Roundcube instance (for example
+          mail.example.gov). Access is requested per domain. Nothing is enabled
+          until you approve the browser prompt.
+        </p>
+        <ul id="domain-list" class="domain-list" aria-live="polite"></ul>
+        <div class="add-domain">
+          <label class="sr-only" for="domain-input" data-i18n="srWebmailHostname">Webmail hostname</label>
+          <input
+            type="text"
+            id="domain-input"
+            placeholder="mail.example.gov"
+            data-i18n-placeholder="optDomainPlaceholder"
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <button type="button" id="domain-add" class="btn btn-primary" data-i18n="optAddDomain">Add domain</button>
+        </div>
+        <p id="domain-status" class="status" role="status" aria-live="polite"></p>
+      </section>
+
+      <section aria-labelledby="behaviour-heading" class="card">
+        <h2 id="behaviour-heading" data-i18n="optHeadingBehaviour">Classification behaviour</h2>
+        <fieldset id="allowed-levels"></fieldset>
+        <div class="field"><label for="default-level">Default for new messages</label><select id="default-level"></select></div>
+        <p id="level-policy-status" class="hint"></p>
+        <div class="field">
+          <label for="missing" data-i18n="optMissingLabel">When sending without a classification</label>
+          <select id="missing">
+            <option value="off" data-i18n="optMissingOff">Do nothing</option>
+            <option value="warn" data-i18n="optMissingWarn">Warn me (I can continue)</option>
+            <option value="block" data-i18n="optMissingBlock">Block sending until one is selected</option>
+          </select>
+        </div>
+        <label class="row switch">
+          <input type="checkbox" id="warn-downgrade" />
+          <span data-i18n="optWarnDowngrade">Warn when a reply or forward lowers the classification</span>
+        </label>
+        <p class="hint" data-i18n="optBehaviourHint">
+          TLP does not permit wider sharing without the source&rsquo;s explicit
+          permission. Downgrades are warned about, never performed silently.
+        </p>
+      </section>
+
+      <section aria-labelledby="marking-heading" class="card">
+        <h2 id="marking-heading" data-i18n="optHeadingMarking">Markings &amp; appearance</h2>
+        <label class="row switch">
+          <input type="checkbox" id="mark-subject" />
+          <span data-i18n="optMarkSubject">Add the TLP label to the subject line</span>
+        </label>
+        <label class="row switch">
+          <input type="checkbox" id="mark-body" />
+          <span data-i18n="optMarkBody">Add the TLP label at the top of the message body</span>
+        </label>
+        <label class="row switch">
+          <input type="checkbox" id="color-coding" />
+          <span data-i18n="optColorCoding">Use official TLP colour coding (the text label is always shown)</span>
+        </label>
+        <div class="field">
+          <label for="theme" data-i18n="optThemeLabel">Interface theme</label>
+          <select id="theme">
+            <option value="auto" data-i18n="optThemeAuto">Match system</option>
+            <option value="light" data-i18n="optThemeLight">Light</option>
+            <option value="dark" data-i18n="optThemeDark">Dark</option>
+          </select>
+        </div>
+      </section>
+
+      <section aria-labelledby="profile-heading" class="card">
+        <h2 id="profile-heading">Organisation profiles</h2>
+        <p class="hint">Share approved levels, a default and the missing-classification rule with Thunderbird. Profiles are editable presets; administrator policy takes priority. Website access is authorised separately.</p>
+        <div class="field"><label for="profile-file">Import a JSON profile (up to 16 KB)</label><input id="profile-file" type="file" accept=".json,application/json"></div>
+        <pre id="profile-preview" aria-live="polite"></pre>
+        <button id="profile-apply" type="button" class="btn" disabled>Apply previewed profile</button>
+        <div class="field"><label for="profile-name">Name for exported profile</label><input id="profile-name" type="text" value="My organisation" maxlength="100"></div>
+        <button id="profile-export" type="button" class="btn">Export current rules</button>
+        <p id="profile-status" role="status" aria-live="polite"></p>
+      </section>
+      <section aria-labelledby="privacy-heading" class="card">
+        <h2 id="privacy-heading" data-i18n="optHeadingPrivacy">Privacy</h2>
+        <ul class="privacy-list">
+          <li data-i18n="optPrivacy1">No telemetry, analytics, tracking, or external APIs.</li>
+          <li data-i18n="optPrivacy2">No email content, recipients, or attachments are read for anything but on-screen marking, and none are stored.</li>
+          <li data-i18n="optPrivacy3">Settings are stored only in this browser profile (storage.local).</li>
+          <li data-i18n="optPrivacy4">No remote code and no dynamic evaluation.</li>
+        </ul>
+        <p class="hint" data-i18n="optPrivacyHint">
+          Browser-side checks are advisory: they can be bypassed and are not a
+          substitute for server-side policy or data-loss prevention.
+        </p>
+      </section>
+
+      <footer class="page-footer">
+        <span id="version" class="hint"></span>
+      </footer>
+    </main>
+    <script src="options.js" type="module"></script>
+  </body>
+</html>

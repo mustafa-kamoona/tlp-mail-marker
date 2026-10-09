@@ -1,0 +1,36 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: daily
+      time: "06:00"
+      timezone: Asia/Baghdad
+    open-pull-requests-limit: 5
+    groups:
+      npm-patch-and-minor:
+        applies-to: version-updates
+        patterns: ["*"]
+        update-types: [minor, patch]
+      npm-security-patch-and-minor:
+        applies-to: security-updates
+        patterns: ["*"]
+        update-types: [minor, patch]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: Asia/Baghdad
+    open-pull-requests-limit: 5
+    groups:
+      actions-patch-and-minor:
+        applies-to: version-updates
+        patterns: ["*"]
+        update-types: [minor, patch]
+      actions-security-patch-and-minor:
+        applies-to: security-updates
+        patterns: ["*"]
+        update-types: [minor, patch]

@@ -1,0 +1,246 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-test:
+    name: Typecheck, tests & build
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Audit dependency vulnerabilities
+        run: npm audit --audit-level=low
+
+      - name: Type check
+        run: npm run typecheck
+
+      - name: Unit & integration tests
+        run: npm test
+
+      - name: Dependency auto-merge policy tests
+        run: npm run test:automation
+
+      - name: Build (production)
+        run: npm run build
+
+      - name: Build Firefox add-on
+        run: npm run build:firefox
+
+      - name: Validate Firefox add-on
+        run: npm exec --yes --package=web-ext@10.7.0 -- web-ext lint --source-dir dist-firefox --warnings-as-errors
+
+      - name: Build Thunderbird add-on
+        run: npm run build:thunderbird
+
+      - name: Verify the build has no sourcemaps and no remote references
+        run: |
+          set -e
+          if grep -RIl "sourceMappingURL" dist dist-firefox dist-thunderbird; then
+            echo "Unexpected sourcemap reference in production build" >&2
+            exit 1
+          fi
+          # The SVG namespace is an identifier used by createElementNS, not a fetch.
+          # Allow only that exact URI; URL suffixes and other hosts still fail.
+          if grep -hoE "https?://[a-zA-Z0-9./_?=&%:#@+~-]+" dist/*.js dist-firefox/*.js dist-thunderbird/*.js \
+            | grep -vxF "http://www.w3.org/2000/svg"; then
+            echo "Unexpected remote reference in production build" >&2
+            exit 1
+          fi
+
+      - name: Package (Chrome Web Store zip)
+        run: npm run package
+
+      - name: Package Thunderbird add-on
+        run: npm run package:thunderbird
+
+      - name: Package Firefox add-on
+        run: npm run package:firefox
+
+      - name: Upload release artifact
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: tlp-mail-marker-package
+          path: release/
+          if-no-files-found: error
+
+  e2e:
+    name: Browser E2E (Roundcube)
+    runs-on: ubuntu-24.04
+    needs: build-test
+    # Include browser coverage on pull requests before dependency updates may merge.
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Build E2E extension
+        run: npm run build:e2e
+
+      - name: Run browser E2E
+        run: npm run e2e
+
+      - name: Upload E2E report and screenshots
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: e2e-artifacts
+          path: tests/e2e/artifacts/
+          if-no-files-found: ignore
+
+  firefox:
+    name: Native E2E (Firefox ${{ matrix.channel }})
+    runs-on: ubuntu-24.04
+    needs: build-test
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - version: 140.17.0esr
+            channel: ESR
+            sha256: 86d049070ad80b74d8e674793e22d28923b4a7a1da06b4d65402f91c67a10314
+          - version: 157.0.1
+            channel: Stable
+            sha256: 0d92bf39cdd174f5f361008509310bdefbce72a57ca10523a43b32d62dc699b6
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Install pinned Firefox
+        env:
+          FIREFOX_VERSION: ${{ matrix.version }}
+          FIREFOX_SHA256: ${{ matrix.sha256 }}
+        run: |
+          curl --fail --location --retry 3 --output "$RUNNER_TEMP/firefox.tar.xz" \
+            "https://archive.mozilla.org/pub/firefox/releases/$FIREFOX_VERSION/linux-x86_64/en-US/firefox-$FIREFOX_VERSION.tar.xz"
+          echo "$FIREFOX_SHA256  $RUNNER_TEMP/firefox.tar.xz" | sha256sum --check
+          tar -xJf "$RUNNER_TEMP/firefox.tar.xz" -C "$RUNNER_TEMP"
+      - name: Build and package Firefox add-on
+        run: |
+          npm run build:firefox
+          npm run package:firefox
+      - name: Run native Firefox tests
+        run: |
+          docker compose -f tests/e2e/docker-compose.yml up -d
+          trap 'docker compose -f tests/e2e/docker-compose.yml down -v' EXIT
+          for attempt in $(seq 1 60); do
+            if curl --fail --silent http://127.0.0.1:8081/ > /dev/null; then break; fi
+            sleep 1
+          done
+          FIREFOX_BINARY="$RUNNER_TEMP/firefox/firefox" npm run e2e:firefox
+      - name: Upload Firefox report and logs
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: firefox-${{ matrix.version }}-artifacts
+          path: tests/firefox/artifacts/
+          if-no-files-found: ignore
+
+  thunderbird-windows:
+    name: Native E2E (Thunderbird Windows)
+    runs-on: windows-2025
+    needs: build-test
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Install pinned Thunderbird ESR
+        shell: pwsh
+        run: |
+          $installer = Join-Path $env:RUNNER_TEMP 'thunderbird.exe'
+          Invoke-WebRequest 'https://archive.mozilla.org/pub/thunderbird/releases/140.17.0esr/win64/en-US/Thunderbird%20Setup%20140.17.0esr.exe' -OutFile $installer
+          if ((Get-FileHash $installer -Algorithm SHA256).Hash.ToLower() -ne 'ff6eac0375eecc6f44529ee48cf2a399d8aff6d24cb7220c82bb041d4472c367') { throw 'Thunderbird checksum mismatch' }
+          7z x $installer "-o$env:RUNNER_TEMP/thunderbird" -y
+          if ($LASTEXITCODE -ne 0) { throw 'Could not extract Thunderbird' }
+      - name: Build and package Thunderbird add-on
+        run: |
+          npm run build:thunderbird
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          npm run package:thunderbird
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Run native Thunderbird tests
+        shell: pwsh
+        run: |
+          $env:THUNDERBIRD_BINARY = Join-Path $env:RUNNER_TEMP 'thunderbird/core/thunderbird.exe'
+          npm run e2e:thunderbird
+          exit $LASTEXITCODE
+      - name: Upload Windows Thunderbird report and logs
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: thunderbird-windows-artifacts
+          path: tests/thunderbird/artifacts/
+          if-no-files-found: ignore
+
+  thunderbird:
+    name: Native E2E (Thunderbird)
+    runs-on: ubuntu-24.04
+    needs: build-test
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Install pinned Thunderbird ESR
+        run: |
+          curl --fail --location --retry 3 --output "$RUNNER_TEMP/thunderbird.tar.xz" \
+            https://archive.mozilla.org/pub/thunderbird/releases/140.17.0esr/linux-x86_64/en-US/thunderbird-140.17.0esr.tar.xz
+          echo "217edda8359412f13d76765802ed946b94b3cf95db5a4c8d9386f1f62f9391de  $RUNNER_TEMP/thunderbird.tar.xz" | sha256sum --check
+          tar -xJf "$RUNNER_TEMP/thunderbird.tar.xz" -C "$RUNNER_TEMP"
+      - name: Build Thunderbird add-on
+        run: npm run build:thunderbird
+      - name: Package Thunderbird add-on
+        run: npm run package:thunderbird
+      - name: Run native Thunderbird tests
+        # Test both the temporary harness and permanent production-XPI install.
+        run: |
+          docker run --detach --rm --name tlp-beta-imap -p 127.0.0.1:3143:3143 \
+            -e GREENMAIL_OPTS='-Dgreenmail.setup.test.imap -Dgreenmail.hostname=0.0.0.0 -Dgreenmail.auth.disabled' \
+            greenmail/standalone:2.1.0
+          trap 'docker stop tlp-beta-imap' EXIT
+          THUNDERBIRD_IMAP_PORT=3143 THUNDERBIRD_BINARY="$RUNNER_TEMP/thunderbird/thunderbird" xvfb-run -a npm run e2e:thunderbird
+      - name: Upload Thunderbird report and logs
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: thunderbird-artifacts
+          path: tests/thunderbird/artifacts/
+          if-no-files-found: ignore

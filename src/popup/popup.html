@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title data-i18n="appName">TLP Mail Marker</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <main class="popup">
+      <h1 data-i18n="appName">TLP Mail Marker</h1>
+      <p id="status" class="status" role="status" aria-live="polite" data-i18n="popupChecking">Checking this page…</p>
+      <div class="actions">
+        <button type="button" id="toggle-site" class="btn btn-primary" hidden></button>
+        <button type="button" id="open-options" class="btn" data-i18n="popupSettings">Settings</button>
+      </div>
+      <section class="legend" aria-labelledby="legend-heading">
+        <h2 id="legend-heading" data-i18n="popupLegendHeading">FIRST TLP 2.0</h2>
+        <ul id="legend-list"></ul>
+      </section>
+      <p class="footnote" data-i18n="popupFootnote">
+        No tracking. No external servers. Settings stay in this browser profile.
+      </p>
+    </main>
+    <script src="popup.js" type="module"></script>
+  </body>
+</html>

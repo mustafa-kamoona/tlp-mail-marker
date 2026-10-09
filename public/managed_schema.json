@@ -1,0 +1,59 @@
+{
+  "type": "object",
+  "properties": {
+    "enabled": {
+      "type": "boolean",
+      "title": "Enable TLP Mail Marker",
+      "description": "Set to false to disable the extension for all users."
+    },
+    "domains": {
+      "type": "array",
+      "title": "Authorised webmail hosts",
+      "description": "Hostnames where the extension is allowed to run. Users cannot remove these. Grant host access with the ExtensionSettings runtime_allowed_hosts policy.",
+      "items": {
+        "type": "string"
+      }
+    },
+    "allowUserDomains": {
+      "type": "boolean",
+      "title": "Allow users to add their own webmail hosts",
+      "description": "When false, only the hosts in the domains policy are used."
+    },
+    "missingClassification": {
+      "type": "string",
+      "title": "Action when sending without a classification",
+      "enum": ["off", "warn", "block"]
+    },
+    "warnOnDowngrade": {
+      "type": "boolean",
+      "title": "Warn when a reply or forward lowers the classification"
+    },
+    "markSubject": {
+      "type": "boolean",
+      "title": "Add the TLP label to the subject line"
+    },
+    "markBody": {
+      "type": "boolean",
+      "title": "Add the TLP label at the top of the message body"
+    },
+    "colorCoding": {
+      "type": "boolean",
+      "title": "Use official TLP colour coding"
+    },
+    "allowedLevels": {
+      "type": "array",
+      "title": "Permitted TLP classifications",
+      "description": "Restrict the selector to this subset of TLP 2.0 labels.",
+      "items": {
+        "type": "string",
+        "enum": ["TLP:CLEAR", "TLP:GREEN", "TLP:AMBER", "TLP:AMBER+STRICT", "TLP:RED"]
+      }
+    },
+    "defaultLevel": {
+      "type": "string",
+      "title": "Default classification for new messages",
+      "description": "Preselected for brand-new messages only. Must be within allowedLevels.",
+      "enum": ["TLP:CLEAR", "TLP:GREEN", "TLP:AMBER", "TLP:AMBER+STRICT", "TLP:RED"]
+    }
+  }
+}

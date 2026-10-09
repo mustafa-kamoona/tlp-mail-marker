@@ -1,0 +1,144 @@
+:root {
+  --bg: #ffffff;
+  --fg: #1f2328;
+  --muted: #57606a;
+  --border: #d0d7de;
+  --accent: #0969da;
+  --danger: #cf222e;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #161b22;
+    --fg: #e6edf3;
+    --muted: #9198a1;
+    --border: #30363d;
+    --accent: #4493f8;
+    --danger: #f85149;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.popup {
+  width: 320px;
+  padding: 14px 16px;
+}
+
+h1 {
+  font-size: 15px;
+  margin: 0 0 8px;
+}
+
+h2 {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  margin: 12px 0 6px;
+}
+
+.status {
+  margin: 0 0 10px;
+}
+
+.status[data-tone='ok'] {
+  color: var(--accent);
+}
+
+.status[data-tone='error'] {
+  color: var(--danger);
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.btn {
+  font: inherit;
+  border-radius: 8px;
+  padding: 7px 12px;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--fg);
+  flex: 1;
+}
+
+.btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.legend ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.legend li {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 5px;
+}
+
+.dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.35);
+  flex: 0 0 auto;
+  transform: translateY(1px);
+}
+
+.dot[data-level='TLP:RED'] {
+  background: #ff2b2b;
+}
+.dot[data-level='TLP:AMBER'] {
+  background: #ffc000;
+}
+.dot[data-level='TLP:AMBER+STRICT'] {
+  background: #ffc000;
+  box-shadow: inset 0 0 0 2px #000;
+}
+.dot[data-level='TLP:GREEN'] {
+  background: #33ff00;
+}
+.dot[data-level='TLP:CLEAR'] {
+  background: #ffffff;
+}
+
+.legend .name {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.legend .desc {
+  color: var(--muted);
+}
+
+.footnote {
+  color: var(--muted);
+  font-size: 11px;
+  margin: 12px 0 0;
+}

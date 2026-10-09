@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "TLP Mail Marker for Thunderbird",
+  "version": "0.3.0",
+  "description": "Apply FIRST TLP 2.0 markings to email in Thunderbird. Local processing, no tracking.",
+  "author": "mustafa-kamoona",
+  "default_locale": "en",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "{7d620cf4-26c5-499b-9a35-b6901f827b4a}",
+      "strict_min_version": "140.0"
+    }
+  },
+  "background": { "scripts": ["background.js"] },
+  "permissions": ["compose", "storage"],
+  "optional_permissions": ["messagesRead"],
+  "compose_action": {
+    "default_title": "TLP classification",
+    "default_popup": "popup.html",
+    "default_icon": "icons/icon-32.png"
+  },
+  "options_ui": { "page": "options.html", "open_in_tab": true },
+  "icons": { "32": "icons/icon-32.png", "128": "icons/icon-128.png" },
+  "content_security_policy": {
+    "extension_pages": "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'"
+  }
+}

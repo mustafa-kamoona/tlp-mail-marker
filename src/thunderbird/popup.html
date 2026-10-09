@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>TLP classification</title><link rel="stylesheet" href="ui.css"></head>
+<body><main>
+  <h1 data-i18n="selectorTitle">TLP classification</h1>
+  <p class="muted">Mark this message with FIRST TLP 2.0.</p>
+  <form id="classification"><fieldset id="levels"><legend>Sharing boundary</legend></fieldset>
+    <p id="description"></p>
+    <button id="apply" type="submit">Apply classification</button>
+  </form>
+  <section id="confirmation" hidden><p id="advice" role="alert"></p><button id="confirm-change" type="button">I have permission — confirm change</button><button id="cancel-change" type="button">Go back</button></section>
+  <ul id="issues"></ul>
+  <p id="status" role="status" aria-live="polite"></p>
+  <button id="settings" type="button" class="secondary">Settings</button>
+  <p class="muted">TLP describes sharing boundaries. It is not encryption or access control.</p>
+</main><script src="popup.js"></script></body></html>

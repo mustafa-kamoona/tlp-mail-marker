@@ -1,0 +1,16 @@
+node_modules
+dist/
+dist-e2e/
+dist-firefox/
+dist-firefox-e2e/
+tests/firefox/artifacts/
+dist-thunderbird/
+*.xpi
+tests/thunderbird/artifacts/
+release/
+*.zip
+*.log
+.DS_Store
+coverage/
+tests/e2e/.roundcube/
+tests/e2e/artifacts/
