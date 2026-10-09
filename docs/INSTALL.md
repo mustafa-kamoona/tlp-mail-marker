@@ -9,8 +9,9 @@ See [the Thunderbird guide](THUNDERBIRD.md) for permissions, usage and testing.
 
 ## For users (from the Chrome Web Store)
 
-The repository and releases remain private; no public listing is available.
-Use the private beta/developer instructions until publication.
+The repository is public. Chrome v0.3.2 was submitted on 2026-10-09 and is
+pending review; the public store installation is not available yet. Use the
+developer instructions below until the listing is published.
 
 1. Install **TLP Mail Marker** from the Chrome Web Store.
 2. Open the extension's **Settings** (or click the toolbar icon → *Settings*).
@@ -28,8 +29,7 @@ the toolbar popup.
 Requirements: Node.js 24.15+ on the 24.x line, or Node.js 26+, and npm.
 CI and release builds use Node.js 24, as specified in `.node-version`.
 
-The repository is currently private. Sign in with a GitHub account that has
-access before cloning.
+The repository is public; no GitHub sign-in is needed to clone it.
 
 ```sh
 git clone https://github.com/mustafa-kamoona/tlp-mail-marker.git tlp-mail-marker
@@ -54,7 +54,7 @@ npm run build:dev      # readable, with inline sourcemaps
 
 Reload the extension from `chrome://extensions` after rebuilding.
 
-### Firefox desktop (private testing)
+### Firefox desktop
 
 ```sh
 npm run build:firefox       # creates dist-firefox/
@@ -66,8 +66,9 @@ Firefox 140+ is required. Open `about:debugging#/runtime/this-firefox`, choose
 unzip it first and select its `manifest.json`. Add your Roundcube hostname in
 Settings and approve site access. Reload existing webmail tabs.
 
-Temporary installation ends when Firefox closes. The private v0.3.1 tester pack
-also provides a Mozilla-signed Firefox XPI for permanent installation through
+Temporary installation ends when Firefox closes. Firefox v0.3.2 was submitted
+for public publication on 2026-10-09 and is awaiting review. Earlier v0.3.1
+Mozilla-signed packages support permanent installation through
 Add-ons and themes → gear menu → Install Add-on From File.
 See [the Firefox guide](FIREFOX.md) for the signed package and local-build steps.
 
@@ -97,6 +98,7 @@ scheme you actually use where possible.
 | Selector appears but the host is not Roundcube | Remove the host; the extension is a no-op on unsupported interfaces. |
 | Marking not applied to the body | Ensure the round-trip through the editor completed; try selecting the level again. |
 | Extension disabled after update | Re-open Settings; reload the webmail tab. |
+| Chrome service worker shows Inactive | Normal while idle: Chrome wakes the worker for events. The in-page TLP controls run separately. |
 
 ## Uninstalling
 

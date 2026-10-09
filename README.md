@@ -5,8 +5,8 @@ Traffic Light Protocol (TLP) 2.0** to outgoing email in **Roundcube Webmail** an
 **Thunderbird**. Both builds share the same classification engine.
 
 Roundcube builds support **Chromium** and **Firefox desktop 140+**. Firefox
-private testing uses a separate Mozilla-signed XPI; local builds produce an
-unsigned ZIP. See the
+v0.3.2 has been submitted for public distribution through Mozilla Add-ons and
+is awaiting review. Local builds produce an unsigned ZIP. See the
 [Firefox installation guide](docs/FIREFOX.md).
 
 In Roundcube, TLP Mail Marker injects a small, accessible classification selector

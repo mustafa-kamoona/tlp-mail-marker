@@ -56,7 +56,12 @@ independent composer tabs; unsupported pages; popup rendering; disabling and
 revoking access. Reports: `tests/firefox/artifacts/{stable,esr}/report.json`.
 
 CI also runs both versions on Linux; those results must be checked separately.
-Permanent signed installation, Firefox Android, Windows Firefox, toolbar-popup
+Signed v0.3.1 installation and persistence after restart were verified on
+macOS Firefox 157.0.1 with signature enforcement enabled. All six CI jobs also
+passed for v0.3.2 commit `99a73e1dd7ab1e6a8518cf1a490cf4c9c878b6b2`,
+including native Firefox stable and ESR.
+
+Firefox Android, Windows Firefox, toolbar-popup
 interaction and administrator policy provisioning have not been executed here.
 
 ## Validated by automated tests (no browser)

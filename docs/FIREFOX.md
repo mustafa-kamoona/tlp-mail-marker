@@ -1,4 +1,4 @@
-# Firefox desktop private beta
+# Firefox desktop
 
 Firefox 140+ shares the existing Roundcube marking engine, settings,
 localisation and organisation-profile controls. Its separate package uses a
@@ -6,15 +6,26 @@ Manifest V3 event background and add-on ID `tlp-mail-marker@mustafa-kamoona`.
 No broad site access is granted at installation and no data collection is
 declared. Authorise each Roundcube host in Settings.
 
-## Install the signed private build
+## Public distribution status
+
+Version 0.3.2 was submitted for **public AMO distribution** on 2026-10-09
+and is **awaiting review**. The package passed Mozilla validation with no errors
+or warnings. Matching build source was submitted; a fresh locked dependency
+installation reproduced all 18 packaged files byte-for-byte.
+
+The intended listing is [TLP Mail Marker](https://addons.mozilla.org/en-US/firefox/addon/tlp-mail-marker/).
+It may not be publicly accessible until Mozilla publishes it. The GitHub
+repository is public.
+
+## Install an earlier signed package
 
 Mozilla approved and signed v0.3.0 for **unlisted self-distribution** on
 2026-10-09. The v0.3.1 icon update and matching build source were approved on the same
 date, and its signed package was downloaded and verified. There is no
-public add-on store listing; the repository remains private.
+public add-on store listing for those earlier unlisted versions.
 
 1. Obtain `tlp-mail-marker-firefox-0.3.1.xpi` and its `.sha256` file from the
-   maintainer's private tester pack and verify the checksum.
+   maintainer's earlier tester pack and verify the checksum.
 2. In Firefox, open **Add-ons and themes** (`about:addons`).
 3. Open the gear menu, choose **Install Add-on From File**, and select the XPI.
 4. Approve installation. Add your Roundcube host in Settings, approve site
@@ -45,8 +56,9 @@ An **unlisted** AMO signing submission provides a signed package without a publi
 store listing, but submits the package, and potentially build source, to Mozilla
 for review. Local builds remain unsigned; rebuilding does not reproduce Mozilla's
 signature. New versions must be submitted through the existing add-on's Developer
-Hub entry. Keep the add-on ID unchanged. This beta has no automatic update URL;
-install later signed packages manually.
+Hub entry. Keep the add-on ID unchanged. Earlier unlisted packages have no
+automatic update URL; install their signed updates manually. Public store
+installations receive updates through AMO.
 
 Official instructions:
 [signing and distribution](https://extensionworkshop.com/documentation/publish/signing-and-distribution-overview/),
