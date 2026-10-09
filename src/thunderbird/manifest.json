@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "TLP Mail Marker for Thunderbird",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Apply FIRST TLP 2.0 markings to email in Thunderbird. Local processing, no tracking.",
   "author": "mustafa-kamoona",
   "default_locale": "en",

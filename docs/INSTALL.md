@@ -66,7 +66,7 @@ Firefox 140+ is required. Open `about:debugging#/runtime/this-firefox`, choose
 unzip it first and select its `manifest.json`. Add your Roundcube hostname in
 Settings and approve site access. Reload existing webmail tabs.
 
-Temporary installation ends when Firefox closes. The private v0.3.0 tester pack
+Temporary installation ends when Firefox closes. The private v0.3.1 tester pack
 also provides a Mozilla-signed Firefox XPI for permanent installation through
 Add-ons and themes → gear menu → Install Add-on From File.
 See [the Firefox guide](FIREFOX.md) for the signed package and local-build steps.

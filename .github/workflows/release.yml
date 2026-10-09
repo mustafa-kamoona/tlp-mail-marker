@@ -51,4 +51,4 @@ jobs:
             release/SHA256SUMS
           generate_release_notes: true
           prerelease: true
-          body_path: docs/RELEASE-v0.2.0.md
+          body_path: release/RELEASE-NOTES.md

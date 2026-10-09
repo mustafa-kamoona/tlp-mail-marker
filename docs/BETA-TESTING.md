@@ -1,27 +1,30 @@
-# Private v0.3.0 beta — tester pack
+# Private v0.3.1 beta — tester pack
 
 This is a private prerelease for 2–3 trusted testers. Download its assets while
 signed in to a GitHub account that can access mustafa-kamoona/tlp-mail-marker. Repository
 access is managed by the owner. Do not upload these packages to an add-on store
 or distribute them publicly yet.
 
+The v0.3.1 Firefox signing submission is complete. Distribute its XPI only after
+the maintainer downloads and verifies Mozilla’s signed file.
+
 ## Install
 
 Verify `SHA256SUMS` or the archive's separate `.sha256` file. macOS/Linux:
 `shasum -a 256 <filename>`; Windows: `Get-FileHash <filename> -Algorithm SHA256`.
 
-- **Chromium:** unzip `tlp-mail-marker-0.3.0.zip` into a folder. In Chrome's
+- **Chromium:** unzip `tlp-mail-marker-0.3.1.zip` into a folder. In Chrome's
   Extensions page, enable Developer mode, choose **Load unpacked**, then select
   that folder. In the extension's Settings, add your exact Roundcube hostname
   and approve access. Validated Roundcube version: 1.6.19, Elastic skin.
 - **Firefox desktop 140+:** open Add-ons and themes → gear menu →
   **Install Add-on From File**, choose the Mozilla-signed
-  `tlp-mail-marker-firefox-0.3.0.xpi`, and approve installation. Add your
+  `tlp-mail-marker-firefox-0.3.1.xpi`, and approve installation. Add your
   Roundcube host in Settings, approve access, and reload webmail tabs.
   Local unsigned builds still need temporary installation; see
   [FIREFOX.md](FIREFOX.md).
 - **Thunderbird:** open Add-ons and Themes → Extensions → gear menu →
-  **Install Add-on From File**. Choose `tlp-mail-marker-thunderbird-0.3.0.xpi`
+  **Install Add-on From File**. Choose `tlp-mail-marker-thunderbird-0.3.1.xpi`
   and approve compose/storage access. Thunderbird 140+ is required. Test first
   with a disposable profile or a test mail account.
 
