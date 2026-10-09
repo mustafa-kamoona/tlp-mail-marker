@@ -1,4 +1,9 @@
-# Security Review
+# Historical Security Review (v0.1.0)
+
+This is the original v0.1.0 review, retained for history. It is not a current
+v0.3.1 security clearance. Dependency versions, browser coverage and local-data
+disclosures have changed since that review; see `COMPATIBILITY.md`,
+`DEPENDENCY_UPDATES.md` and the current `PRIVACY.md`.
 
 Internal security review of TLP Mail Marker 0.1.0, performed after
 implementation (Phase 4). The review covers the extension's own code, its

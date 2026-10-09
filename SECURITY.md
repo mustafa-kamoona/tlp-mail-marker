@@ -6,7 +6,7 @@ Only the latest released version receives security fixes.
 
 | Version | Supported |
 | --- | --- |
-| 0.1.x | :white_check_mark: |
+| Latest 0.3.x release | :white_check_mark: |
 | older | :x: |
 
 ## Reporting a vulnerability
@@ -14,9 +14,10 @@ Only the latest released version receives security fixes.
 Please report suspected vulnerabilities **privately**. Do not open a public
 issue for a security problem.
 
-Contact the maintainer through an existing private channel to arrange disclosure.
-If GitHub **private vulnerability reporting** is available for the repository,
-use "Report a vulnerability" under its *Security* tab.
+Use [GitHub private vulnerability reporting](https://github.com/mustafa-kamoona/tlp-mail-marker/security/advisories/new)
+under the repository’s **Security** tab. This creates a private advisory rather
+than a public issue. Ordinary bug reports and support questions belong in
+[GitHub Issues](https://github.com/mustafa-kamoona/tlp-mail-marker/issues).
 
 Please include:
 

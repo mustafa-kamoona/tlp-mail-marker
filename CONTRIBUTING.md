@@ -23,7 +23,7 @@ spirit of the [Contributor Covenant](https://www.contributor-covenant.org/).
 
 ## Development setup
 
-Requirements: Node.js 20+ and npm.
+Requirements: Node.js 24.15+ (or Node.js 26+) and npm. See `.node-version`.
 
 ```sh
 npm install

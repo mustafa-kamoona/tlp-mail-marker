@@ -61,19 +61,21 @@ to choose the closest available.
 
 ## Data use disclosure
 
-Answer the store's data-use questionnaire as follows:
+The extension processes email locally. Google requires disclosure of local data
+handling even when nothing is transmitted. Declare personal communications and
+website content (the composed subject/body and quoted classification), plus the
+current website address used by the popup and authorised hostnames saved in
+settings. It does not keep a browsing-history log. Use the questionnaire’s
+current category labels and explain these local-only uses in reviewer notes.
 
-- Does the extension collect or use personally identifiable information,
-  health, financial, authentication, personal communications, location, web
-  history, user activity, or website content? → **No.**
-- Is data sold to third parties? → **No.**
-- Is data used or transferred for purposes unrelated to the single purpose? →
-  **No.**
-- Is data used to determine creditworthiness or for lending? → **No.**
+- No sale or transfer to third parties.
+- No use unrelated to the single purpose.
+- No use for creditworthiness or lending.
+- No developer access to messages; no email-content retention.
 
-The extension reads the message being composed **in memory** to display and
-validate the marking. Nothing is stored or transmitted. This is a
-user-visible, single-purpose function, not data collection.
+Do not equate “no external transmission” with “no data handling.” The policy and
+store disclosures must describe the same behavior. Official guidance:
+[Google User Data FAQ](https://developer.chrome.com/docs/webstore/program-policies/user-data-faq).
 
 ## Privacy policy
 
