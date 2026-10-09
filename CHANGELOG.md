@@ -14,6 +14,17 @@ All notable changes to this project are documented here. The format follows
 - Native Firefox stable/ESR acceptance tests, Mozilla manifest validation,
   and required Firefox CI for dependency auto-merging.
 
+## 0.3.2 - 2026-10-09
+
+### Fixed
+
+- Serialize browser script registration across permission, settings and popup
+  events. Overlapping events no longer try to register the same script ID twice,
+  and disabling or removing a host waits for an in-flight registration before
+  unregistering it.
+- Add regression tests for overlapping registration, disabling, host removal
+  and recovery after an API failure.
+
 ## 0.2.0 - 2026-10-09 (private beta)
 
 ### Added

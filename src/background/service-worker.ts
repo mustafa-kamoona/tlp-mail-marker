@@ -16,6 +16,16 @@ const ENV_SCRIPT_ID = 'tlp-mail-marker-env';
 const CONTENT_SCRIPT_FILE = 'content.js';
 const ENV_SCRIPT_FILE = 'env-probe.js';
 
+let reconciliationQueue: Promise<void> = Promise.resolve();
+
+function reconcile(): Promise<void> {
+  // Permission, storage and popup events can arrive during an unfinished
+  // registration. Read current settings and script IDs only after the previous
+  // operation completes, including when disabling or revoking access.
+  reconciliationQueue = reconciliationQueue.then(reconcileOnce, reconcileOnce);
+  return reconciliationQueue;
+}
+
 async function ensureDefaults(): Promise<void> {
   const stored = await chrome.storage.local.get(SETTINGS_KEY);
   if (stored[SETTINGS_KEY] === undefined) {
@@ -27,7 +37,7 @@ async function ensureDefaults(): Promise<void> {
  * Register exactly the content-script matches that are both authorised by the
  * user's domain list and actually granted as host permissions.
  */
-async function reconcile(): Promise<void> {
+async function reconcileOnce(): Promise<void> {
   try {
     const settings = await loadSettings();
     if (!settings.enabled) {
